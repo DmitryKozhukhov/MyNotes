@@ -47,15 +47,15 @@ public class NoteDetailsFragment extends Fragment {
 
         dateOfCreation = view.findViewById(R.id.dateOfCreation);
 
-        getParentFragmentManager()
-                .setFragmentResultListener(NotesListFragment.NOTE_SELECTED, getViewLifecycleOwner(), new FragmentResultListener() {
-                    @Override
-                    public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
-                        Note note = result.getParcelable(NotesListFragment.SELECTED_NOTE_BUNDLE);
+        view.findViewById(R.id.remove).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
-                        updateNote(note);
-                    }
-                });
+                getParentFragmentManager()
+                        .popBackStack();
+            }
+        });
+
 
         Bundle arguments = getArguments();
 
@@ -65,6 +65,7 @@ public class NoteDetailsFragment extends Fragment {
             updateNote(note);
         }
     }
+
 
     private void updateNote(Note note){
 
