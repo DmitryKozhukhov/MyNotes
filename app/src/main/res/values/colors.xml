@@ -9,4 +9,5 @@
     <color name="white">#FFFFFFFF</color>
     <color name="color_date">#FF4800</color>
     <color name="color_background">#00F44336</color>
+    <color name="color_toolbar">#876D29</color>
 </resources>

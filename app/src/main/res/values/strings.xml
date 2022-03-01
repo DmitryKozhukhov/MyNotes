@@ -1,4 +1,14 @@
 <resources>
     <string name="app_name">MyNotes</string>
     <string name="text_btn_remove"><![CDATA[< Заметки]]></string>
+    <string name="action_search">Search</string>
+    <string name="action_sort">Sort</string>
+    <string name="action_share">Share</string>
+    <string name="action_add_photo">Add photo</string>
+    <string name="notes">Заметки</string>
+    <string name="details">Описание</string>
+    <string name="info">Информация о приложении</string>
+    <string name="open_drawer">Open Drawer</string>
+    <string name="close_drawer">Close Drawer</string>
+    <string name="text_info">Приложение Заметки. Разработчик Кожухов Дмитрий. Версия 2.0. 2022г.</string>
 </resources>
