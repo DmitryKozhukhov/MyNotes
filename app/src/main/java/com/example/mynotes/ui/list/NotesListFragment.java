@@ -19,6 +19,7 @@ import androidx.fragment.app.Fragment;
 import com.example.mynotes.R;
 import com.example.mynotes.domain.Note;
 import com.example.mynotes.domain.NotesRepositoryImpl;
+import com.example.mynotes.ui.MainActivity;
 import com.example.mynotes.ui.NavDrawable;
 
 import java.util.List;
