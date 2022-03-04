@@ -1,20 +1,25 @@
 package com.example.mynotes.ui.list;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
 import com.example.mynotes.R;
 import com.example.mynotes.domain.Note;
 import com.example.mynotes.domain.NotesRepositoryImpl;
+import com.example.mynotes.ui.NavDrawable;
 
 import java.util.List;
 
@@ -44,6 +49,31 @@ public class NotesListFragment extends Fragment implements NotesListView {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        Toolbar toolbar = view.findViewById(R.id.toolbar);
+
+        if (requireActivity() instanceof NavDrawable) {
+            ((NavDrawable) requireActivity()).setAppBar(toolbar);
+        }
+
+
+        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @SuppressLint("NonConstantResourceId")
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+
+                switch (item.getItemId()) {
+                    case R.id.action_search:
+                        Toast.makeText(requireContext(), "Search", Toast.LENGTH_SHORT).show();
+                        break;
+                    case R.id.action_sort:
+                        Toast.makeText(requireContext(), "Sort", Toast.LENGTH_SHORT).show();
+                        break;
+                }
+
+                return false;
+            }
+        });
 
         container = view.findViewById(R.id.container);
 
