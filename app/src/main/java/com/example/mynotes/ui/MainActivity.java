@@ -1,16 +1,17 @@
 package com.example.mynotes.ui;
 
-import android.annotation.SuppressLint;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentResultListener;
 
 import com.example.mynotes.R;
@@ -20,7 +21,7 @@ import com.example.mynotes.ui.info.NoteInfoFragment;
 import com.example.mynotes.ui.list.NotesListFragment;
 import com.google.android.material.navigation.NavigationView;
 
-public class MainActivity extends AppCompatActivity implements NavDrawable{
+public class MainActivity extends AppCompatActivity implements NavDrawable {
 
     DrawerLayout drawerLayout;
 
@@ -36,17 +37,17 @@ public class MainActivity extends AppCompatActivity implements NavDrawable{
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                if (item.getItemId() == R.id.action_notes){
+                if (item.getItemId() == R.id.action_notes) {
 
-                        getSupportFragmentManager()
-                                .beginTransaction()
-                                .replace(R.id.container, new NotesListFragment())
-                                .commit();
+                    getSupportFragmentManager()
+                            .beginTransaction()
+                            .replace(R.id.container, new NotesListFragment())
+                            .commit();
 
-                        drawerLayout.closeDrawer(GravityCompat.START);
+                    drawerLayout.closeDrawer(GravityCompat.START);
                 }
 
-                if (item.getItemId() == R.id.action_info){
+                if (item.getItemId() == R.id.action_info) {
 
                     getSupportFragmentManager()
                             .beginTransaction()
@@ -73,6 +74,35 @@ public class MainActivity extends AppCompatActivity implements NavDrawable{
 
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (getSupportFragmentManager().getBackStackEntryCount() < 1) {
+            new AlertDialog.Builder(MainActivity.this)
+                    .setIcon(R.drawable.ic_baseline_warning_24)
+                    .setTitle("Подтвердите выход")
+                    .setMessage("Вы точно хотите выйти?")
+                    .setNegativeButton("Отмена", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                            Toast.makeText(MainActivity.this, "Отмена", Toast.LENGTH_SHORT).show();
+
+                        }
+                    })
+                    .setPositiveButton("Выйти", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                            Toast.makeText(MainActivity.this, "Выйти", Toast.LENGTH_SHORT).show();
+                            finish();
+                        }
+                    })
+                    .show();
+        } else {
+            super.onBackPressed();
+        }
     }
 
     @Override
