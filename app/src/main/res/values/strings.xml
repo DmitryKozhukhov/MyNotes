@@ -11,4 +11,10 @@
     <string name="open_drawer">Open Drawer</string>
     <string name="close_drawer">Close Drawer</string>
     <string name="text_info">Приложение Заметки. Разработчик Кожухов Дмитрий. Версия 2.0. 2022г.</string>
+    <string name="exit">Выйти</string>
+    <string name="cancel">Отмена</string>
+    <string name="exit_question">Вы точно хотите выйти?</string>
+    <string name="exit_confirmation">Подтвердите выход</string>
+    <string name="action_list">List</string>
+    <string name="action_info">Info</string>
 </resources>

@@ -5,17 +5,18 @@ import android.os.Parcelable;
 
 import androidx.annotation.DrawableRes;
 
-public class Note implements Parcelable {
+import java.util.Date;
+
+public class Note  implements Parcelable{
     private final String id;
 
     @DrawableRes
     private final int image;
-
     private final String name;
     private final String description;
-    private final String dateOfCreation;
+    private final Date dateOfCreation;
 
-    public Note(String id, int image, String name, String description, String dateOfCreation) {
+    public Note(String id, int image, String name, String description, Date dateOfCreation) {
         this.id = id;
         this.image = image;
         this.name = name;
@@ -24,18 +25,21 @@ public class Note implements Parcelable {
     }
 
 
-    protected Note(Parcel in) {
+    protected Note(Parcel in, Date dateOfCreation) {
         id = in.readString();
         image = in.readInt();
         name = in.readString();
         description = in.readString();
-        dateOfCreation = in.readString();
+//        dateOfCreation = in.readString();
+        this.dateOfCreation = dateOfCreation;
     }
 
     public static final Creator<Note> CREATOR = new Creator<Note>() {
+        public Date dateOfCreation;
+
         @Override
         public Note createFromParcel(Parcel in) {
-            return new Note(in);
+            return new Note(in, dateOfCreation);
         }
 
         @Override
@@ -60,7 +64,7 @@ public class Note implements Parcelable {
         return description;
     }
 
-    public String getDateOfCreation() {
+    public Date getDateOfCreation() {
         return dateOfCreation;
     }
 
@@ -75,6 +79,5 @@ public class Note implements Parcelable {
         dest.writeInt(image);
         dest.writeString(name);
         dest.writeString(description);
-        dest.writeString(dateOfCreation);
     }
 }
