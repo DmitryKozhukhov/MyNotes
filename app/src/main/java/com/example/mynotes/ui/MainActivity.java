@@ -1,5 +1,6 @@
 package com.example.mynotes.ui;
 
+import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -45,6 +46,7 @@ public class MainActivity extends AppCompatActivity implements NavDrawable {
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_nav);
 
         bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
+            @SuppressLint("NonConstantResourceId")
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {

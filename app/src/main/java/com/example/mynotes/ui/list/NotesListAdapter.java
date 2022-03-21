@@ -7,6 +7,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mynotes.R;
@@ -20,6 +21,12 @@ import java.util.Locale;
 
 public class NotesListAdapter extends RecyclerView.Adapter<NotesListAdapter.NoteViewHolder> {
 
+    private final Fragment fragment;
+
+    public NotesListAdapter(Fragment fragment) {
+        this.fragment = fragment;
+    }
+
     public OnNoteClicked getOnNoteClicked() {
         return onNoteClicked;
     }
@@ -30,6 +37,8 @@ public class NotesListAdapter extends RecyclerView.Adapter<NotesListAdapter.Note
 
     interface OnNoteClicked {
         void onNoteClicked(Note note);
+
+        void onNoteLongClicked(Note note, int position);
     }
 
     private final SimpleDateFormat format = new SimpleDateFormat("dd MMMM yyyy", Locale.getDefault());
@@ -39,6 +48,21 @@ public class NotesListAdapter extends RecyclerView.Adapter<NotesListAdapter.Note
     public void setData(Collection<Note> toSet) {
         data.clear();
         data.addAll(toSet);
+    }
+
+    public int addItem(Note toAdd) {
+        data.add(toAdd);
+
+        return data.size() - 1;
+    }
+
+
+    public void removeItem(int selectedNoteIndex) {
+        data.remove(selectedNoteIndex);
+    }
+
+    public void updateItem(Note note, int selectedNoteIndex) {
+        data.set(selectedNoteIndex, note);
     }
 
     private OnNoteClicked onNoteClicked;
@@ -55,10 +79,10 @@ public class NotesListAdapter extends RecyclerView.Adapter<NotesListAdapter.Note
     public void onBindViewHolder(@NonNull NoteViewHolder holder, int position) {
         Note item = data.get(position);
 
-        holder.name.setText(item.getName());
-        holder.content.setText(item.getDescription());
+        holder.name.setText(item.getTitle());
+        holder.content.setText(item.getContent());
         holder.image.setImageResource(R.drawable.event_note);
-        holder.date.setText(format.format(item.getDateOfCreation()));
+        holder.date.setText(format.format(item.getCreatedAt()));
     }
 
     @Override
@@ -76,7 +100,11 @@ public class NotesListAdapter extends RecyclerView.Adapter<NotesListAdapter.Note
         public NoteViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            itemView.findViewById(R.id.card).setOnClickListener(new View.OnClickListener() {
+            View card = itemView.findViewById(R.id.card);
+
+            fragment.registerForContextMenu(card);
+
+            card.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (getOnNoteClicked() != null) {
@@ -86,6 +114,23 @@ public class NotesListAdapter extends RecyclerView.Adapter<NotesListAdapter.Note
                         getOnNoteClicked().onNoteClicked(data.get(clickedAt));
                     }
 
+                }
+            });
+
+            card.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+
+                    if (getOnNoteClicked() != null) {
+
+                        int clickedAt = getAdapterPosition();
+
+                        getOnNoteClicked().onNoteLongClicked(data.get(clickedAt), clickedAt);
+                    }
+
+                    view.showContextMenu();
+
+                    return true;
                 }
             });
 
