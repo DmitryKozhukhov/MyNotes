@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="margin">16dp</dimen>
-    <dimen name="event_note_dim">48dp</dimen>
+    <dimen name="event_note_dim">36dp</dimen>
     <dimen name="text_size_note">20sp</dimen>
     <dimen name="event_note_land_dim">88dp</dimen>
     <dimen name="text_size_btn_remove">8sp</dimen>
+    <dimen name="corner_radius">24dp</dimen>
+    <dimen name="small_margin">4dp</dimen>
 </resources>

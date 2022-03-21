@@ -17,9 +17,14 @@ import com.example.mynotes.R;
 import com.example.mynotes.domain.Note;
 import com.example.mynotes.ui.NavDrawable;
 
+import java.text.SimpleDateFormat;
+import java.util.Locale;
+
 public class NoteDetailsFragment extends Fragment {
 
     private static final String ARG_NOTE = "ARG_NOTE";
+
+    private SimpleDateFormat format = new SimpleDateFormat("dd MMMM yyyy", Locale.getDefault());
 
     public static NoteDetailsFragment newInstance(Note note) {
 
@@ -93,6 +98,7 @@ public class NoteDetailsFragment extends Fragment {
 
         description.setText(note.getDescription());
 
-        dateOfCreation.setText(note.getDateOfCreation());
+        dateOfCreation.setText(format.format(note.getDateOfCreation()));
+
     }
 }

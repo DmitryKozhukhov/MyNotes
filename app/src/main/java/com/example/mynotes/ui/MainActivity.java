@@ -19,6 +19,8 @@ import com.example.mynotes.domain.Note;
 import com.example.mynotes.ui.details.NoteDetailsFragment;
 import com.example.mynotes.ui.info.NoteInfoFragment;
 import com.example.mynotes.ui.list.NotesListFragment;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.navigation.NavigationView;
 
 public class MainActivity extends AppCompatActivity implements NavDrawable {
@@ -30,7 +32,41 @@ public class MainActivity extends AppCompatActivity implements NavDrawable {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        if (savedInstanceState == null) {
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.container, new NotesListFragment())
+                    .commit();
+
+        }
+
         drawerLayout = findViewById(R.id.drawer);
+
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_nav);
+
+        bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.action_list:
+                        getSupportFragmentManager()
+                                .beginTransaction()
+                                .replace(R.id.container, new NotesListFragment())
+                                .commit();
+
+                        return true;
+
+                    case R.id.action_info:
+                        getSupportFragmentManager()
+                                .beginTransaction()
+                                .replace(R.id.container, new NoteInfoFragment())
+                                .commit();
+
+                        return true;
+                }
+                return false;
+            }
+        });
 
         NavigationView navigationView = findViewById(R.id.navigation);
 
@@ -45,6 +81,7 @@ public class MainActivity extends AppCompatActivity implements NavDrawable {
                             .commit();
 
                     drawerLayout.closeDrawer(GravityCompat.START);
+                    return true;
                 }
 
                 if (item.getItemId() == R.id.action_info) {
@@ -81,9 +118,9 @@ public class MainActivity extends AppCompatActivity implements NavDrawable {
         if (getSupportFragmentManager().getBackStackEntryCount() < 1) {
             new AlertDialog.Builder(MainActivity.this)
                     .setIcon(R.drawable.ic_baseline_warning_24)
-                    .setTitle("Подтвердите выход")
-                    .setMessage("Вы точно хотите выйти?")
-                    .setNegativeButton("Отмена", new DialogInterface.OnClickListener() {
+                    .setTitle(R.string.exit_confirmation)
+                    .setMessage(R.string.exit_question)
+                    .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
 
@@ -91,11 +128,11 @@ public class MainActivity extends AppCompatActivity implements NavDrawable {
 
                         }
                     })
-                    .setPositiveButton("Выйти", new DialogInterface.OnClickListener() {
+                    .setPositiveButton(R.string.exit, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
 
-                            Toast.makeText(MainActivity.this, "Выйти", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(MainActivity.this, R.string.exit, Toast.LENGTH_SHORT).show();
                             finish();
                         }
                     })
