@@ -24,7 +24,7 @@ public class NoteDetailsFragment extends Fragment {
 
     private static final String ARG_NOTE = "ARG_NOTE";
 
-    private SimpleDateFormat format = new SimpleDateFormat("dd MMMM yyyy", Locale.getDefault());
+    private final SimpleDateFormat format = new SimpleDateFormat("dd MMMM yyyy", Locale.getDefault());
 
     public static NoteDetailsFragment newInstance(Note note) {
 
@@ -96,9 +96,9 @@ public class NoteDetailsFragment extends Fragment {
 
         eventNote.setImageResource(note.getImage());
 
-        description.setText(note.getDescription());
+        description.setText(note.getContent());
 
-        dateOfCreation.setText(format.format(note.getDateOfCreation()));
+        dateOfCreation.setText(format.format(note.getCreatedAt()));
 
     }
 }

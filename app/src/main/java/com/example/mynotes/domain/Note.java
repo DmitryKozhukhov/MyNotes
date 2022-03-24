@@ -6,40 +6,51 @@ import android.os.Parcelable;
 import androidx.annotation.DrawableRes;
 
 import java.util.Date;
+import java.util.Objects;
 
 public class Note  implements Parcelable{
     private final String id;
 
     @DrawableRes
     private final int image;
-    private final String name;
-    private final String description;
-    private final Date dateOfCreation;
+    private final String title;
+    private final String content;
+    private final Date createdAt;
 
-    public Note(String id, int image, String name, String description, Date dateOfCreation) {
+    public Note(String id, int image, String title, String content, Date createdAt) {
         this.id = id;
         this.image = image;
-        this.name = name;
-        this.description = description;
-        this.dateOfCreation = dateOfCreation;
+        this.title = title;
+        this.content = content;
+        this.createdAt = createdAt;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Note note = (Note) o;
+        return image == note.image && Objects.equals(id, note.id) && Objects.equals(title, note.title) && Objects.equals(content, note.content) && Objects.equals(createdAt, note.createdAt);
+    }
 
-    protected Note(Parcel in, Date dateOfCreation) {
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, image, title, content, createdAt);
+    }
+
+    protected Note(Parcel in) {
         id = in.readString();
         image = in.readInt();
-        name = in.readString();
-        description = in.readString();
-//        dateOfCreation = in.readString();
-        this.dateOfCreation = dateOfCreation;
+        title = in.readString();
+        content = in.readString();
+        createdAt = (Date) in.readSerializable();
     }
 
     public static final Creator<Note> CREATOR = new Creator<Note>() {
-        public Date dateOfCreation;
 
         @Override
         public Note createFromParcel(Parcel in) {
-            return new Note(in, dateOfCreation);
+            return new Note(in);
         }
 
         @Override
@@ -56,16 +67,16 @@ public class Note  implements Parcelable{
         return image;
     }
 
-    public String getName() {
-        return name;
+    public String getTitle() {
+        return title;
     }
 
-    public String getDescription() {
-        return description;
+    public String getContent() {
+        return content;
     }
 
-    public Date getDateOfCreation() {
-        return dateOfCreation;
+    public Date getCreatedAt() {
+        return createdAt;
     }
 
     @Override
@@ -77,7 +88,8 @@ public class Note  implements Parcelable{
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(id);
         dest.writeInt(image);
-        dest.writeString(name);
-        dest.writeString(description);
+        dest.writeString(title);
+        dest.writeString(content);
+        dest.writeSerializable(createdAt);
     }
 }

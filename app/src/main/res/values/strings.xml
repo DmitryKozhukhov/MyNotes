@@ -17,4 +17,9 @@
     <string name="exit_confirmation">Подтвердите выход</string>
     <string name="action_list">List</string>
     <string name="action_info">Info</string>
+    <string name="action_edit">Правка</string>
+    <string name="action_delete">Удалить</string>
+    <string name="edit_title_hint">Заголовок</string>
+    <string name="edit_content_hint">Описание</string>
+    <string name="btn_save">Сохранить</string>
 </resources>
