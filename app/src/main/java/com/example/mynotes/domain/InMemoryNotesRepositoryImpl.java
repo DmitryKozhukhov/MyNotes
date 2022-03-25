@@ -12,7 +12,7 @@ import java.util.UUID;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
-public class NotesRepositoryImpl implements com.example.mynotes.domain.NotesRepository {
+public class InMemoryNotesRepositoryImpl implements com.example.mynotes.domain.NotesRepository {
 
     private final Executor executor = Executors.newSingleThreadExecutor();
 
@@ -20,7 +20,7 @@ public class NotesRepositoryImpl implements com.example.mynotes.domain.NotesRepo
 
     private final Handler mainThreadHandler = new Handler(Looper.getMainLooper());
 
-    public NotesRepositoryImpl() {
+    public InMemoryNotesRepositoryImpl() {
 
         notes.add(new com.example.mynotes.domain.Note(UUID.randomUUID().toString(), R.drawable.event_note, "Зарядка", "Сделать 100 присяданий, 100 отжиманий", new Date()));
         notes.add(new com.example.mynotes.domain.Note(UUID.randomUUID().toString(), R.drawable.event_note, "Стомотолог", "Записаться к стоматологу", new Date()));
@@ -33,7 +33,7 @@ public class NotesRepositoryImpl implements com.example.mynotes.domain.NotesRepo
 
     }
 
-    public static final NotesRepository INSTANCE = new NotesRepositoryImpl();
+    public static final NotesRepository INSTANCE = new InMemoryNotesRepositoryImpl();
 
     public static NotesRepository getInstance() {
         return INSTANCE;
@@ -115,7 +115,7 @@ public class NotesRepositoryImpl implements com.example.mynotes.domain.NotesRepo
 
 
     @Override
-    public Note update(String id, String newTitle, String newContent) {
+    public void update(String id, String newTitle, String newContent, Callback<Note> callback) {
 
         Note toChange = null;
         int indexToChange = -1;
@@ -132,7 +132,6 @@ public class NotesRepositoryImpl implements com.example.mynotes.domain.NotesRepo
         Note newNote = new Note(toChange.getId(), R.drawable.event_note, newTitle, newContent, toChange.getCreatedAt());
 
         notes.set(indexToChange, newNote);
-
-        return newNote;
+        callback.onSuccess(newNote);
     }
 }
