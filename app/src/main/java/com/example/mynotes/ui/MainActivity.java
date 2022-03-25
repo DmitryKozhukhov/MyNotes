@@ -20,6 +20,8 @@ import com.example.mynotes.domain.Note;
 import com.example.mynotes.ui.details.NoteDetailsFragment;
 import com.example.mynotes.ui.info.NoteInfoFragment;
 import com.example.mynotes.ui.list.NotesListFragment;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.navigation.NavigationView;
@@ -34,11 +36,7 @@ public class MainActivity extends AppCompatActivity implements NavDrawable {
         setContentView(R.layout.activity_main);
 
         if (savedInstanceState == null) {
-            getSupportFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.container, new NotesListFragment())
-                    .commit();
-
+            openNotes();
         }
 
         drawerLayout = findViewById(R.id.drawer);
@@ -51,10 +49,7 @@ public class MainActivity extends AppCompatActivity implements NavDrawable {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.action_list:
-                        getSupportFragmentManager()
-                                .beginTransaction()
-                                .replace(R.id.container, new NotesListFragment())
-                                .commit();
+                        openNotes();
 
                         return true;
 
@@ -67,6 +62,13 @@ public class MainActivity extends AppCompatActivity implements NavDrawable {
                         return true;
                 }
                 return false;
+            }
+        });
+
+        getSupportFragmentManager().setFragmentResultListener(AuthFragment.KEY_AUTHORIZED, this, new FragmentResultListener() {
+            @Override
+            public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
+                openNotes();
             }
         });
 
@@ -159,5 +161,22 @@ public class MainActivity extends AppCompatActivity implements NavDrawable {
 
         toggle.syncState();
 
+    }
+
+    private void openNotes(){
+
+        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
+
+        if (account == null) {
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.container, new AuthFragment())
+                    .commit();
+        } else {
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.container, new NotesListFragment())
+                    .commit();
+        }
     }
 }

@@ -22,4 +22,5 @@
     <string name="edit_title_hint">Заголовок</string>
     <string name="edit_content_hint">Описание</string>
     <string name="btn_save">Сохранить</string>
+    <string name="btn_update">Обновить</string>
 </resources>

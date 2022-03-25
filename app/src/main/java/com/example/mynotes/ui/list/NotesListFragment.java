@@ -20,10 +20,14 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mynotes.R;
+import com.example.mynotes.domain.FireStoreNotesRepository;
 import com.example.mynotes.domain.Note;
-import com.example.mynotes.domain.NotesRepositoryImpl;
+import com.example.mynotes.domain.InMemoryNotesRepositoryImpl;
+import com.example.mynotes.domain.SharedPreferencesNotesRepository;
 import com.example.mynotes.ui.NavDrawable;
+import com.example.mynotes.ui.edit.AddNotePresenter;
 import com.example.mynotes.ui.edit.EditNoteBottomSheetDialogFragment;
+import com.example.mynotes.ui.edit.EditNotePresenter;
 
 import java.util.List;
 
@@ -46,7 +50,7 @@ public class NotesListFragment extends Fragment implements NotesListView {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        presenter = new NotesListPresenter(this, NotesRepositoryImpl.getInstance());
+        presenter = new NotesListPresenter(this, InMemoryNotesRepositoryImpl.getInstance());
 
     }
 
@@ -61,7 +65,7 @@ public class NotesListFragment extends Fragment implements NotesListView {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        presenter = new NotesListPresenter(this, NotesRepositoryImpl.INSTANCE);
+        presenter = new NotesListPresenter(this, FireStoreNotesRepository.INSTANCE);
 
         list = view.findViewById(R.id.list);
 
@@ -80,12 +84,12 @@ public class NotesListFragment extends Fragment implements NotesListView {
             @Override
             public void onClick(View v) {
 
-                presenter.addItem();
-
+                EditNoteBottomSheetDialogFragment.newAddInstance()
+                        .show(getParentFragmentManager(), "EditNoteBottomSheetDialogFragment");
             }
         });
 
-        getParentFragmentManager().setFragmentResultListener(EditNoteBottomSheetDialogFragment.KEY_REQUEST, getViewLifecycleOwner(), new FragmentResultListener() {
+        getParentFragmentManager().setFragmentResultListener(EditNotePresenter.KEY_UPDATE, getViewLifecycleOwner(), new FragmentResultListener() {
             @Override
             public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
                 Note note = result.getParcelable(EditNoteBottomSheetDialogFragment.ARG_NOTE);
@@ -93,6 +97,19 @@ public class NotesListFragment extends Fragment implements NotesListView {
                 adapter.updateItem(note, presenter.getSelectedNoteIndex());
 
                 adapter.notifyItemChanged(presenter.getSelectedNoteIndex());
+            }
+        });
+
+        getParentFragmentManager().setFragmentResultListener(AddNotePresenter.KEY_ADD, getViewLifecycleOwner(), new FragmentResultListener() {
+            @Override
+            public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
+                Note note = result.getParcelable(EditNoteBottomSheetDialogFragment.ARG_NOTE);
+
+                int index = adapter.addItem(note);
+
+                adapter.notifyItemInserted(index);
+
+                list.smoothScrollToPosition(index);
             }
         });
 
@@ -155,17 +172,6 @@ public class NotesListFragment extends Fragment implements NotesListView {
     }
 
     @Override
-    public void addNote(Note note) {
-
-        int index = adapter.addItem(note);
-
-        adapter.notifyItemInserted(index);
-
-        list.smoothScrollToPosition(index);
-
-    }
-
-    @Override
     public void removeNote(Note note, int index) {
 
         adapter.removeItem(index);
@@ -197,7 +203,7 @@ public class NotesListFragment extends Fragment implements NotesListView {
         switch (item.getItemId()) {
             case R.id.action_edit:
 
-                EditNoteBottomSheetDialogFragment.newInstance(presenter.getSelectedNote())
+                EditNoteBottomSheetDialogFragment.newUpdateInstance(presenter.getSelectedNote())
                         .show(getParentFragmentManager(), "EditNoteBottomSheetDialogFragment");
 
                 return true;
